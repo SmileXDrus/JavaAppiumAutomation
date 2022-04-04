@@ -12,6 +12,12 @@ public class MainClassTest  {
     }
 
     @Test
+    public void testGetClassString(){
+        Assert.assertTrue("String contains substring",
+                mc_obj.getClassString().contains("Hello") || mc_obj.getClassString().contains("hello"));
+    }
+
+    @Test
     public void testGetLocalNumber() {
         Assert.assertEquals("Return value is not equal 14", 14, mc_obj.getLocalNumber());
     }
