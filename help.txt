@@ -1,0 +1,6 @@
+Appium Java client	    Selenium Java client
+8.0.0-beta	            4.1.0
+7.3.0	                3.141.59
+7.2.0	                3.141.59
+7.1.0	                4.0.0-alpha-1
+7.0.0	                3.141.59
