@@ -40,7 +40,6 @@ public class FirstTest {
     }
 
     @Test
-    @Ignore
     public void firstTest() {
 
         waitForElementAndClick(
@@ -61,7 +60,6 @@ public class FirstTest {
         );
     }
 
-    @Ignore
     @Test
     public void testCancelSearch() {
         waitForElementAndClick(
@@ -113,7 +111,6 @@ public class FirstTest {
         );
     }
 
-    @Ignore
     @Test
     public void testCompareArticleTitle() {
         waitForElementAndClick(
@@ -146,6 +143,23 @@ public class FirstTest {
                 article_title
         );
 
+    }
+
+    @Test
+    public void testCompareTextOfTitle() {
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Search Wikipedia",
+                "We see unexpected text"
+        );
+    }
+
+    private boolean assertElementHasText(By by, String expected_text, String error_message) {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.withMessage(error_message + '\n');
+        return wait.until(
+                ExpectedConditions.attributeContains(by,"text", expected_text)
+        );
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
