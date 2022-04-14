@@ -4,7 +4,6 @@ import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -56,7 +56,8 @@ public class FirstTest {
 
         waitForElementPresent(
                 By.xpath("//android.widget.LinearLayout[3]/android.widget.LinearLayout/android.widget.TextView[2]"),
-                "Cannot find text in third (3) string by search", 5
+                "Cannot find text in third (3) string by search",
+                5
         );
     }
 
@@ -154,6 +155,37 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testVisibilityArticlesAfterSearchAndClear() {
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
+                "Cannot find search input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find search element",
+                15
+        );
+
+        List<WebElement> elements = getListOfAllElementsLocatedBy(
+                By.xpath("//android.widget.ListView/android.widget.LinearLayout"),
+                "No one articles after search"
+                );
+        Assert.assertTrue("No one articles after search",elements.size() >= 1);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find close_btn element",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Search and read the free encyclopedia')]"),
+                "Articles presents on the page", 5
+        );
+    }
+
     private boolean assertElementHasText(By by, String expected_text, String error_message) {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.withMessage(error_message + '\n');
@@ -161,6 +193,15 @@ public class FirstTest {
                 ExpectedConditions.attributeContains(by,"text", expected_text)
         );
     }
+
+    private List<WebElement> getListOfAllElementsLocatedBy(By by, String error_message) {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.withMessage(error_message + '\n');
+        return wait.until(
+                ExpectedConditions.visibilityOfAllElementsLocatedBy(by)
+        );
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
