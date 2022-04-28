@@ -309,6 +309,158 @@ public class FirstTest {
     }
 
     @Test
+    public void saveSeveralArticleToMyListAndCheckRemoval() {
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
+                "Cannot find search input",
+                5
+        );
+
+        String search_line = "Java";
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search_line,
+                "Cannot find search element",
+                10
+        );
+
+        String name_of_article_1 = "Java (programming language)";
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_article_1 + "']"),
+                "Cannot find search input",
+                5
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title",
+                10
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find 'more option button'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find option to add article to reading list",
+                5
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/onboarding_button"),
+                "Cannot find 'Got id' button",
+                5
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find text input for set name",
+                5
+        );
+
+        String name_of_folder = "Learning programming";
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                name_of_folder,
+                "Cannot put text for set name",
+                5
+        );
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Cannot press OK button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find X button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search_line,
+                "Cannot find search element",
+                10
+        );
+
+        String name_of_article_2 = "JavaScript";
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_article_2 + "']"),
+                "Cannot find search input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find 'more option button'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find option to add article to reading list",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot save article in existing folder",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find X button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "Cannot find navigation button to My lists",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder in My lists",
+                5
+        );
+        swipeElementToLeft(
+                By.xpath("//*[@text='" + name_of_article_1 + "']"),
+                "Cannot find saved article"
+        );
+        waitForElementNotPresent(
+                By.xpath("//*[@text='" + name_of_article_1 + "']"),
+                "Cannot delete saved article",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[@text='" + name_of_article_2 + "']"),
+                "Cannot find second saved article",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_article_2 + "']"),
+                "Cannot find second saved article",
+                5
+        );
+        String title = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "text",
+                "Cannot find text attribute for view_page_title_text",
+                5
+        );
+        Assert.assertEquals(
+                "Text attribute " + title + " not equal " + name_of_article_2,
+                name_of_article_2,
+                title);
+
+    }
+
+    @Test
     public void testAmountOfNonEmptySearch() {
         waitForElementAndClick(
                 By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
