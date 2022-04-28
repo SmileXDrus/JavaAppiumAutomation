@@ -474,6 +474,38 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCheckArticlesContainsSearchWord() {
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
+                "Cannot find search input",
+                5
+        );
+
+        String search_line = "java";
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search_line,
+                "Cannot find search element",
+                5
+        );
+
+        List<WebElement> elements = getListOfAllElementsLocatedBy(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']"),
+                "No one articles after search"
+        );
+
+        for(int i = 0; i < elements.size(); i++) {
+            String el_i = elements
+                    .get(i)
+                    .getAttribute("text")
+                    .toLowerCase();
+            Assert.assertTrue(el_i + " attribute doesn't contain '" + search_line + "'",
+                    el_i.contains(search_line));
+        }
+    }
+
     private boolean assertElementHasText(By by, String expected_text, String error_message) {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.withMessage(error_message + '\n');
