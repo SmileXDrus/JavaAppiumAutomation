@@ -42,6 +42,9 @@ public class FirstTest {
 
     @After
     public void tearDown() {
+        if (driver.getOrientation() != ScreenOrientation.PORTRAIT) {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
         driver.quit();
     }
 
