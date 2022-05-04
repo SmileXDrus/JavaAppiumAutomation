@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -309,7 +310,7 @@ public class FirstTest {
     }
 
     @Test
-    public void saveSeveralArticleToMyListAndCheckRemoval() {
+    public void testSaveSeveralArticleToMyListAndCheckRemoval() {
         waitForElementAndClick(
                 By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
                 "Cannot find search input",
@@ -674,6 +675,29 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCheckArticleTitleElement() {
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc=\"Search Wikipedia\"]"),
+                "Cannot find search input",
+                5
+        );
+
+        String search_line = "java";
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search_line,
+                "Cannot find search element",
+                5
+        );
+
+        Assert.assertTrue("Cannot find article title ('title' element)",
+                assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"))
+        );
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -682,6 +706,17 @@ public class FirstTest {
                 ExpectedConditions.presenceOfElementLocated(by)
         );
     }
+
+    private boolean assertElementPresent(By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        }
+        catch (NoSuchElementException e_selenium) {
+            return false;
+        }
+    }
+
     private WebElement waitForElementPresent(By by, String error_message) {
         // в java нет параметра по умолчанию, используют перегрузку методов
         return waitForElementPresent(by, error_message, 5);
@@ -770,7 +805,7 @@ public class FirstTest {
     }
     private int getAmountOfElements(By by)
     {
-        List elements = driver.findElements(by);
+        List<?> elements = driver.findElements(by);
         return elements.size();
     }
 
