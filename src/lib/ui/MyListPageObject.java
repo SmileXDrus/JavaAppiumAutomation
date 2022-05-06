@@ -11,8 +11,8 @@ public class MyListPageObject extends MainPageObject {
         ARTICLE_BY_TITLE_TEMPLATE = "//*[@text='{TITLE}']";
 
     /* TEMPLATES METHODS */
-    private static String getFolderXpathByName(String substring) {
-        return FOLDER_BY_NAME_TEMPLATE.replace("{FOLDER_NAME}", substring);
+    private static String getFolderXpathByName(String substring_1) {
+        return FOLDER_BY_NAME_TEMPLATE.replace("{FOLDER_NAME}", substring_1);
     }
 
     private static String getSavedArticleXpathByTitle(String substring) {
@@ -28,7 +28,7 @@ public class MyListPageObject extends MainPageObject {
         this.waitForElementAndClick(
                 By.xpath(getFolderXpathByName(name_of_folder)),
                 "Cannot find created folder in My lists",
-                5
+                10
         );
     }
     public void swipeByArticleToDelete(String name_of_article) {

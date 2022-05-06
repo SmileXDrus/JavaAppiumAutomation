@@ -20,11 +20,11 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public boolean assertElementHasText(By by, String expected_text, String error_message) {
+    public boolean assertExpectedTextMatchesTheTextAttribute(By by, String expected_text, String attribute, String error_message) {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.withMessage(error_message + '\n');
         return wait.until(
-                ExpectedConditions.attributeContains(by,"text", expected_text)
+                ExpectedConditions.attributeContains(by,attribute, expected_text)
         );
     }
 
@@ -134,8 +134,9 @@ public class MainPageObject {
         TouchAction action = new TouchAction(driver);
         action
                 .press(right_x, middle_y)
-                .waitAction(400)
+                .waitAction(300)
                 .moveTo(left_x/2, middle_y)
+                .waitAction(300)
                 .release()
                 .perform();
 

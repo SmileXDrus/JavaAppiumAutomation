@@ -14,11 +14,19 @@ public class ArticlePageObject extends MainPageObject {
             ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
             MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "android:id/button1",
-            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+            CLICK_TO_EXISTING_FOLDER_IN_MY_LIST = "//*[@text='{SUBSTRING}']",
+            COUNT_OF_ARTICLES = "//android.widget.ListView/android.widget.LinearLayout";
 
     public ArticlePageObject(AppiumDriver<?> driver) {
         super(driver);
     }
+
+    /* TEMPLATES METHODS */
+    private static String getNameFolderString(String substring) {
+        return CLICK_TO_EXISTING_FOLDER_IN_MY_LIST.replace("{SUBSTRING}", substring);
+    }
+    /*/ TEMPLATES METHODS /*/
 
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(By.id(TITLE), "Cannot find article title on the page", 15);
@@ -69,6 +77,30 @@ public class ArticlePageObject extends MainPageObject {
                 By.id(MY_LIST_OK_BUTTON),
                 "Cannot press OK button",
                 5
+        );
+    }
+
+    public void addArticleToMyListInExistingFolder(String name_of_folder) {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find 'more option button'",
+                5
+        );
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5
+        );
+        this.waitForElementAndClick(
+                By.xpath(getNameFolderString(name_of_folder)),
+                "Cannot find existing folder with name " + name_of_folder,
+                5
+        );
+    }
+
+    public int getAmountOfArticles() {
+        return this.getAmountOfElements(
+                By.xpath(COUNT_OF_ARTICLES)
         );
     }
 
