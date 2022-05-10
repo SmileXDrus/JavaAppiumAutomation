@@ -6,7 +6,7 @@ Appium Java client	    Selenium Java client
 7.0.0	                3.141.59
 
 Project:
-java-client 4.1.2
+java-client 6.1
 junit 4.12
 selenium-server 3.4
-appium 1.5.0
+Appium Desktop 1.22.3
