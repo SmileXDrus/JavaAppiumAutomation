@@ -1,5 +1,7 @@
 package tests;
 
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 import lib.CoreTestCase;
@@ -11,12 +13,12 @@ import lib.ui.SearchPageObject;
 public class MyListsTests extends CoreTestCase {
     @Test
     public void testSaveFirstArticleToMyList() {
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
         Search.waitForSearchResultByDescription("Object-oriented programming language");
         Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
         String name_of_article = Article.getArticleTitle();
         String name_of_folder = "Learning programming";
@@ -38,12 +40,12 @@ public class MyListsTests extends CoreTestCase {
                 name_of_article_for_delete = "JavaScript",
                 name_of_folder = "Learning programming";
 
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine(search_line);
         Search.clickByArticleWithSubstringByTitle(name_of_article_1);
 
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
         String name_of_article_before_save_in_my_list = Article.getArticleTitle();
         Article.addArticleToMyList(name_of_folder);

@@ -1,23 +1,23 @@
 package tests;
 
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
-import lib.ui.MainPageObject;
 import lib.ui.SearchPageObject;
 
 public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCompareArticleTitle() {
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
         Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
 
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         String article_title = Article.getArticleTitle();
 
         assertEquals(
@@ -28,23 +28,23 @@ public class ArticleTests extends CoreTestCase {
     }
 
     @Test
-    public void testSwapeArticle() {
-        SearchPageObject Search = new SearchPageObject(driver);
+    public void testSwipeArticle() {
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
-        Search.typeSearchLine("Appium");
-        Search.clickByArticleWithSubstringByDescription("Automation for Apps");
+        Search.typeSearchLine("Java");
+        Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
 
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
         Article.swipeToFooter();
     }
 
     @Test
     public void testVisibilityArticlesAfterSearchAndClear() {
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Search.waitForSearchResultByTitle("Java");
 
         assertTrue("No one articles after search",Article.getAmountOfArticles() > 0);
@@ -55,7 +55,7 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCheckArticlesContainsSearchWord() {
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         String search_line = "java";
         Search.typeSearchLine(search_line);
@@ -69,11 +69,11 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testCheckArticleTitleElement() {
 
-        SearchPageObject Search = new SearchPageObject(driver);
+        SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
         Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
-        ArticlePageObject Article = new ArticlePageObject(driver);
+        ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
     }
 }

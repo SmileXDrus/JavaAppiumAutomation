@@ -126,6 +126,10 @@ public class MainPageObject {
         }
     }
 
+    public boolean isElementLocatedOnTheScreen(String locator_with_type) {
+        return true; //TODO
+    }
+
     public void swipeElementToLeft(String locator_with_type, String err_msg) {
         WebElement element = waitForElementPresent(
                 locator_with_type,
