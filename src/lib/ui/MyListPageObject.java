@@ -1,14 +1,12 @@
 package lib.ui;
 
-import org.openqa.selenium.By;
-
 import io.appium.java_client.AppiumDriver;
 
 public class MyListPageObject extends MainPageObject {
 
     public static final String
-        FOLDER_BY_NAME_TEMPLATE = "//*[@text='{FOLDER_NAME}']",
-        ARTICLE_BY_TITLE_TEMPLATE = "//*[@text='{TITLE}']";
+        FOLDER_BY_NAME_TEMPLATE = "xpath://*[@text='{FOLDER_NAME}']",
+        ARTICLE_BY_TITLE_TEMPLATE = "xpath://*[@text='{TITLE}']";
 
     /* TEMPLATES METHODS */
     private static String getFolderXpathByName(String substring_1) {
@@ -26,7 +24,7 @@ public class MyListPageObject extends MainPageObject {
 
     public void openFolderByName(String name_of_folder) {
         this.waitForElementAndClick(
-                By.xpath(getFolderXpathByName(name_of_folder)),
+                getFolderXpathByName(name_of_folder),
                 "Cannot find created folder in My lists",
                 10
         );
@@ -34,21 +32,21 @@ public class MyListPageObject extends MainPageObject {
     public void swipeByArticleToDelete(String name_of_article) {
         this.waitForArticleToAppearByTitle(name_of_article);
         this.swipeElementToLeft(
-                By.xpath(getSavedArticleXpathByTitle(name_of_article)),
+                getSavedArticleXpathByTitle(name_of_article),
                 "Cannot find saved article"
         );
     }
 
     public void waitForArticleToDissapearByTitle(String name_of_article) {
         this.waitForElementNotPresent(
-                By.xpath(getSavedArticleXpathByTitle(name_of_article)),
+                getSavedArticleXpathByTitle(name_of_article),
                 "Saved article still present with title " + name_of_article,
                 10
         );
     }
     public void waitForArticleToAppearByTitle(String name_of_article) {
         this.waitForElementPresent(
-                By.xpath(getSavedArticleXpathByTitle(name_of_article)),
+                getSavedArticleXpathByTitle(name_of_article),
                 "Cannot find saved article by title",
                 10
         );
