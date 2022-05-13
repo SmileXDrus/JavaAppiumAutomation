@@ -1,11 +1,10 @@
 package lib.ui;
 
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.appium.java_client.AppiumDriver;
 
 abstract public class SearchPageObject extends MainPageObject {
 
@@ -38,7 +37,7 @@ abstract public class SearchPageObject extends MainPageObject {
         this.waitForElementPresent(getResultStringSearchForByText(substring), "Cannot find search result with text: " + substring);
     }
 
-    public SearchPageObject(AppiumDriver<?> driver) {
+    public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

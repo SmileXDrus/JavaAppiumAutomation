@@ -1,9 +1,10 @@
 package lib.ui;
 
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import lib.Platform;
 
-import io.appium.java_client.AppiumDriver;
 
 abstract public class ArticlePageObject extends MainPageObject {
     protected static String
@@ -18,7 +19,7 @@ abstract public class ArticlePageObject extends MainPageObject {
             CLICK_TO_EXISTING_FOLDER_IN_MY_LIST,
             COUNT_OF_ARTICLES;
 
-    public ArticlePageObject(AppiumDriver<?> driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -37,15 +38,24 @@ abstract public class ArticlePageObject extends MainPageObject {
         if (Platform.getInstance().isAndroid()) {
             return title_element.getAttribute("text");
         }
-        else return title_element.getAttribute("name");
+        else
+             return title_element.getAttribute("name");
     }
 
     public void swipeToFooter() {
-        this.swipeUpToFindElement(
-                FOOTER_ELEMENT,
-                "Cannot find the end of the article",
-                15
-        );
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpToFindElement(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of the article",
+                    40
+            );
+        } else {
+            this.swipeTillElementAppear(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of the article",
+                    40
+                    );
+        }
     }
 
     public void addArticleToMyList(String name_of_folder) {
@@ -111,6 +121,14 @@ abstract public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(
                 CLOSE_ARTICLE_BUTTON,
                 "Cannot close article, cannot find X button",
+                5
+        );
+    }
+
+    public void addArticlesToMySaved() {
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find option to add article to reading list",
                 5
         );
     }

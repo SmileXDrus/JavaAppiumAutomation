@@ -1,10 +1,13 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
 
-public class MyListPageObject extends MainPageObject {
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-    public static final String
+import lib.Platform;
+
+abstract public class MyListsPageObject extends MainPageObject {
+
+    protected static String
         FOLDER_BY_NAME_TEMPLATE = "xpath://*[@text='{FOLDER_NAME}']",
         ARTICLE_BY_TITLE_TEMPLATE = "xpath://*[@text='{TITLE}']";
 
@@ -18,7 +21,7 @@ public class MyListPageObject extends MainPageObject {
     }
     /*/ TEMPLATES METHODS /*/
 
-    public MyListPageObject(AppiumDriver<?> driver) {
+    public MyListsPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -35,6 +38,13 @@ public class MyListPageObject extends MainPageObject {
                 getSavedArticleXpathByTitle(name_of_article),
                 "Cannot find saved article"
         );
+        if (Platform.getInstance().isAndroid()) {
+            this.clickElementToTheRightUpperCorner(
+                    name_of_article,
+                    "Cannot find saved article"
+            );
+        }
+        this.waitForArticleToDissapearByTitle(name_of_article);
     }
 
     public void waitForArticleToDissapearByTitle(String name_of_article) {

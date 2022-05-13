@@ -1,5 +1,6 @@
 package tests;
 
+import lib.Platform;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
