@@ -38,7 +38,7 @@ abstract public class MyListsPageObject extends MainPageObject {
                 getSavedArticleXpathByTitle(name_of_article),
                 "Cannot find saved article"
         );
-        if (Platform.getInstance().isAndroid()) {
+        if (Platform.getInstance().isIOS()) {
             this.clickElementToTheRightUpperCorner(
                     name_of_article,
                     "Cannot find saved article"

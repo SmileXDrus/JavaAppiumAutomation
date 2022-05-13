@@ -15,14 +15,15 @@ import lib.ui.SearchPageObject;
 
 public class MyListsTests extends CoreTestCase {
 
-    private static final String name_of_folder = "Learning programming";
+    private static final String
+            name_of_folder = "Learning programming",
+            search_line = "java";
 
     @Test
     public void testSaveFirstArticleToMyList() {
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
-        Search.waitForSearchResultByDescription("Object-oriented programming language");
         Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
 
         ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
@@ -49,14 +50,13 @@ public class MyListsTests extends CoreTestCase {
     @Test
     public void testSaveSeveralArticleToMyListAndCheckRemoval() {
         String
-                search_line = "java",
-                name_of_article_1 = "Java (programming language)",
+                name_of_article = "Java (programming language)",
                 name_of_article_for_delete = "JavaScript";
 
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine(search_line);
-        Search.clickByArticleWithSubstringByTitle(name_of_article_1);
+        Search.clickByArticleWithSubstringByTitle(name_of_article);
 
         ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
@@ -82,10 +82,13 @@ public class MyListsTests extends CoreTestCase {
         Navigation.clickMyLists();
 
         MyListsPageObject MyList = MyListsPageObjectFactory.get(driver);
-        MyList.openFolderByName(name_of_folder);
-        MyList.swipeByArticleToDelete(name_of_article_for_delete);
-        MyList.waitForArticleToAppearByTitle(name_of_article_1);
-        Search.clickByArticleWithSubstringByTitle(name_of_article_1);
+        if (Platform.getInstance().isAndroid()) {
+            MyList.openFolderByName(name_of_folder);
+        }
+        MyList.swipeByArticleToDelete(name_of_article);
+
+        MyList.waitForArticleToAppearByTitle(name_of_article);
+        Search.clickByArticleWithSubstringByTitle(name_of_article);
 
         String title = Article.getArticleTitle();
 
