@@ -66,7 +66,7 @@ public class Platform {
         capabilities.setCapability("AutomationName", "Appium");
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app ", "C:/Users/user/IdeaProjects/JavaAppiumAutomation/apks/org.wikipedia.apk");
+        capabilities.setCapability("app ", "/Users/user/IdeaProjects/JavaAppiumAutomation/apks/org.wikipedia.apk");
         return capabilities;
     }
 
@@ -75,8 +75,9 @@ public class Platform {
 
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone SE (2nd generation)");
+        capabilities.setCapability("AutomationName", "Appium");
         capabilities.setCapability("platformVersion", "14.5");
-        capabilities.setCapability("app ", "C:/Users/user/IdeaProjects/JavaAppiumAutomation/apks/org.wikipedia.app");
+        capabilities.setCapability("app ", "/Users/user/IdeaProjects/JavaAppiumAutomation/apks/Wikipedia.app");
         return capabilities;
     }
 
