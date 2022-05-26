@@ -6,6 +6,7 @@ import io.appium.java_client.touch.offset.PointOption;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -76,11 +77,18 @@ public class MainPageObject {
         return element;
     }
 
-    public WebElement waitForElementAndSendKeys(String locator_with_type, String value, String error_message, long timeoutInSeconds) {
+    public WebElement waitForElementAndSendKeysByUseMobileElement(String locator_with_type, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(locator_with_type, error_message, timeoutInSeconds);
         MobileElement elMobile = (MobileElement) element;
         elMobile.setValue(value);
         return elMobile;
+    }
+
+    public WebElement waitForElementAndSendKeys(String locator_with_type, String value, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresent(locator_with_type, error_message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
     }
 
     public boolean waitForElementNotPresent(String locator_with_type, String error_message, long timeoutInSecond) {
@@ -142,15 +150,23 @@ public class MainPageObject {
             ++already_swiped;
         }
     }
+    public boolean isElementPresent(String locator)
+    {
+        return getAmountOfElements(locator) > 0;
+    }
 
     public boolean isElementLocatedOnTheScreen(String locator_with_type) {
         int element_location_by_y = this.waitForElementPresent(
                 locator_with_type,
                 "Cannot find element by locator",
                 1
-        )
-                .getLocation()
-                .getY();
+        ).getLocation().getY();
+        if (Platform.getInstance().isMW()) {
+            JavascriptExecutor JSExecutor = (JavascriptExecutor) driver;
+            Object js_result = JSExecutor.executeScript("return window.pageYOffset");
+            element_location_by_y -= Integer.parseInt(js_result.toString());
+        }
+
         int screen_size_by_y = driver
                 .manage()
                 .window()
@@ -244,6 +260,48 @@ public class MainPageObject {
             default:
                 throw new IllegalArgumentException("Cannot get type of locator. Locator value: " + locator_with_type);
         }
+    }
+    public void scrollWebPageUp()
+    {
+        if (Platform.getInstance().isMW()) {
+            JavascriptExecutor JSExecutor = (JavascriptExecutor) driver;
+            JSExecutor.executeScript("window.scrollBy(0,250)");
+        } else {
+            System.out.println("Method scrollWebPageUp() does  nothing for platform " + Platform.getInstance().getPlatformVar());
+        }
+    }
 
+    public void scrollWebPageTillElementNotVisible(String locator, String error_message, int max_swipes)
+    {
+        int already_swiped = 0;
+
+        WebElement element = this.waitForElementPresent(locator, error_message);
+
+        while (!this.isElementLocatedOnTheScreen(locator)) {
+            scrollWebPageUp();
+            ++already_swiped;
+            if (already_swiped > max_swipes){
+                Assert.assertTrue(error_message, element.isDisplayed());
+            }
+        }
+    }
+
+    public void tryClickElementWithFewAttempts(String locator, String error_message, int amount_of_attempts)
+    {
+        int current_attempts = 0;
+        boolean need_more_attempts = true;
+
+        while (need_more_attempts) {
+            try {
+                this.waitForElementAndClick(locator, error_message, 1);
+                need_more_attempts = false;
+            } catch (Exception e) {
+                if (current_attempts > amount_of_attempts) {
+                    // last attempt
+                    this.waitForElementAndClick(locator, error_message, 1);
+                }
+            }
+            ++current_attempts;
+        }
     }
 }

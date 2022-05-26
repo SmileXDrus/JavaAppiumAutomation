@@ -1,6 +1,7 @@
 package tests;
 
 import lib.Platform;
+import lib.ui.AuthPageObject;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -17,14 +18,17 @@ public class MyListsTests extends CoreTestCase {
 
     private static final String
             name_of_folder = "Learning programming",
-            search_line = "java";
+            search_line = "java",
+            login = "Testfortests",
+            password = "fortests00"
+    ;
 
     @Test
     public void testSaveFirstArticleToMyList() {
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
-        Search.clickByArticleWithSubstringByDescription("Object-oriented programming language");
+        Search.clickByArticleWithSubstringByDescription("bject-oriented programming language");
 
         ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
         Article.waitForTitleElement();
@@ -33,6 +37,14 @@ public class MyListsTests extends CoreTestCase {
         if(Platform.getInstance().isAndroid()) {
             Article.addArticleToMyList(name_of_folder);
         } else {
+            Article.addArticlesToMySaved();
+        }
+        if (Platform.getInstance().isMW()){
+            auth();
+            assertEquals("We back not to the same page after login.",
+                    name_of_article,
+                    Article.getArticleTitle()
+            );
             Article.addArticlesToMySaved();
         }
         Article.closeArticle();
@@ -98,4 +110,11 @@ public class MyListsTests extends CoreTestCase {
                 title);
     }
 
+    private void auth()
+    {
+        AuthPageObject Auth = new AuthPageObject(driver);
+        Auth.clickAuthButton();
+        Auth.enterLogInData(login, password);
+        Auth.submitForm();
+    }
 }

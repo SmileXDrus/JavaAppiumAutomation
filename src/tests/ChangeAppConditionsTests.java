@@ -12,6 +12,10 @@ import lib.ui.SearchPageObject;
 public class ChangeAppConditionsTests extends CoreTestCase {
     @Test
     public void testChangeScreenOrientationOnResults() {
+        if (Platform.getInstance().isMW()) {
+            return;
+        }
+
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine("java");
@@ -31,7 +35,6 @@ public class ChangeAppConditionsTests extends CoreTestCase {
         );
 
         this.rotateScreenPortrait();
-
         String title_after_second_rotation = Article.getArticleTitle();
 
         assertEquals(
@@ -43,7 +46,11 @@ public class ChangeAppConditionsTests extends CoreTestCase {
 
     @Test
     public void testCheckSearchArticleInBackground() {
+        if (Platform.getInstance().isMW()) {
+            return;
+        }
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
+
         Search.initSearchInput();
         Search.typeSearchLine("java");
         Search.waitForSearchResultByDescription("Object-oriented programming language");

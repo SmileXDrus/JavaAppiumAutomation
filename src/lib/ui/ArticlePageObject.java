@@ -17,7 +17,8 @@ abstract public class ArticlePageObject extends MainPageObject {
             MY_LIST_OK_BUTTON,
             CLOSE_ARTICLE_BUTTON,
             CLICK_TO_EXISTING_FOLDER_IN_MY_LIST,
-            COUNT_OF_ARTICLES;
+            COUNT_OF_ARTICLES,
+            OPTION_REMOVE_FROM_MY_LIST_BUTTON;
 
     public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
@@ -37,24 +38,32 @@ abstract public class ArticlePageObject extends MainPageObject {
         WebElement title_element = waitForTitleElement();
         if (Platform.getInstance().isAndroid()) {
             return title_element.getAttribute("text");
-        }
-        else
-             return title_element.getAttribute("name");
+        } else if (Platform.getInstance().isIOS()) {
+            return title_element.getAttribute("name");
+        } else
+             return title_element.getText();
     }
 
-    public void swipeToFooter() {
+    public void  swipeToFooter() {
         if (Platform.getInstance().isAndroid()) {
             this.swipeUpToFindElement(
                     FOOTER_ELEMENT,
                     "Cannot find the end of the article",
                     40
             );
-        } else {
+        } else if (Platform.getInstance().isIOS()) {
             this.swipeTillElementAppear(
                     FOOTER_ELEMENT,
                     "Cannot find the end of the article",
                     40
-                    );
+            );
+        }
+        else {
+            this.scrollWebPageTillElementNotVisible(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of the article",
+                    40
+            );
         }
     }
 
@@ -118,20 +127,41 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
     public void closeArticle() {
-        this.waitForElementAndClick(
-                CLOSE_ARTICLE_BUTTON,
-                "Cannot close article, cannot find X button",
-                5
-        );
+        if(Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    CLOSE_ARTICLE_BUTTON,
+                    "Cannot close article, cannot find X button",
+                    5
+            );
+        } else {
+            System.out.println("Method closeArticle() does nothing for platform " + Platform.getInstance().getPlatformVar());
+        }
+
     }
 
     public void addArticlesToMySaved() {
+        if(Platform.getInstance().isMW()) {
+            this.removeArticleFromSavedIfItAdded();
+        }
         this.waitForElementAndClick(
                 OPTIONS_ADD_TO_MY_LIST_BUTTON,
                 "Cannot find option to add article to reading list",
                 5
         );
     }
-
+    public void removeArticleFromSavedIfItAdded()
+    {
+        if (this.isElementPresent(OPTION_REMOVE_FROM_MY_LIST_BUTTON)) {
+            this.waitForElementAndClick(
+                    OPTION_REMOVE_FROM_MY_LIST_BUTTON,
+                    "Cannot click button to remove an article from saved",
+                    1
+            );
+            this.waitForElementPresent(
+                    OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                    "Cannot find button to add an article to saved list after removing it from this list before."
+            );
+        }
+    }
 }
 
