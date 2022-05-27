@@ -163,5 +163,8 @@ abstract public class ArticlePageObject extends MainPageObject {
             );
         }
     }
+    public boolean checkArticleSavedInWatchlist() {
+        return this.isElementPresent(OPTION_REMOVE_FROM_MY_LIST_BUTTON);
+    }
 }
 

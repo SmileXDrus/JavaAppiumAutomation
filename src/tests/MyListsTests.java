@@ -40,7 +40,7 @@ public class MyListsTests extends CoreTestCase {
             Article.addArticlesToMySaved();
         }
         if (Platform.getInstance().isMW()){
-            auth();
+            this.auth();
             assertEquals("We back not to the same page after login.",
                     name_of_article,
                     Article.getArticleTitle()
@@ -62,32 +62,40 @@ public class MyListsTests extends CoreTestCase {
     @Test
     public void testSaveSeveralArticleToMyListAndCheckRemoval() {
         String
-                name_of_article = "Java (programming language)",
-                name_of_article_for_delete = "JavaScript";
+                article_description = "bject-oriented programming language",
+                article_description_for_delete = "igh-level programming language";
 
         SearchPageObject Search = SearchPageObjectFactory.get(driver);
         Search.initSearchInput();
         Search.typeSearchLine(search_line);
-        Search.clickByArticleWithSubstringByTitle(name_of_article);
+        Search.clickByArticleWithSubstringByDescription(article_description);
 
         ArticlePageObject Article = ArticlePageObjectFactory.get(driver);
-        Article.waitForTitleElement();
         String name_of_article_before_save_in_my_list = Article.getArticleTitle();
         if(Platform.getInstance().isAndroid()) {
             Article.addArticleToMyList(name_of_folder);
         } else {
             Article.addArticlesToMySaved();
         }
+        if (Platform.getInstance().isMW()){
+            this.auth();
+            assertEquals("We back not to the same page after login.",
+                    name_of_article_before_save_in_my_list,
+                    Article.getArticleTitle()
+            );
+            Article.addArticlesToMySaved();
+        }
         Article.closeArticle();
 
         Search.initSearchInput();
         Search.typeSearchLine(search_line);
-        Search.clickByArticleWithSubstringByTitle(name_of_article_for_delete);
+        Search.clickByArticleWithSubstringByDescription(article_description_for_delete);;
         if (Platform.getInstance().isAndroid()) {
             Article.addArticleToMyListInExistingFolder(name_of_folder);
         } else {
             Article.addArticlesToMySaved();
         }
+        String name_of_article_for_delete = Article.getArticleTitle();
         Article.closeArticle();
 
         NavigationUI Navigation = NavigationUIFactory.get(driver);
@@ -97,17 +105,18 @@ public class MyListsTests extends CoreTestCase {
         if (Platform.getInstance().isAndroid()) {
             MyList.openFolderByName(name_of_folder);
         }
-        MyList.swipeByArticleToDelete(name_of_article);
-
-        MyList.waitForArticleToAppearByTitle(name_of_article);
-        Search.clickByArticleWithSubstringByTitle(name_of_article);
-
+        MyList.swipeByArticleToDelete(name_of_article_for_delete);
+        int count_of_articles = MyList.getCountOfArticlesInWatchlist();
+        MyList.waitForArticleToAppearByTitle(name_of_article_before_save_in_my_list);
+        Search.clickByArticleWithSubstringByDescription(article_description);
         String title = Article.getArticleTitle();
 
+        assertTrue("Article with title '" +title+ "' not in watchlist ", Article.checkArticleSavedInWatchlist());
         assertEquals(
                 "Text attribute " + title + " not equal " + name_of_article_before_save_in_my_list,
                 name_of_article_before_save_in_my_list,
                 title);
+        assertTrue("More articles ("+count_of_articles+") than expected ",count_of_articles<2);
     }
 
     private void auth()

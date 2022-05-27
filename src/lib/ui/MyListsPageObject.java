@@ -10,7 +10,8 @@ abstract public class MyListsPageObject extends MainPageObject {
     protected static String
         FOLDER_BY_NAME_TEMPLATE,
         ARTICLE_BY_TITLE_TEMPLATE,
-        REMOVE_FROM_SAVED_BUTTON;
+        REMOVE_FROM_SAVED_BUTTON,
+        WATCHLIST_ARTICLES;
 
     /* TEMPLATES METHODS */
     private static String getFolderXpathByName(String substring_1) {
@@ -66,15 +67,19 @@ abstract public class MyListsPageObject extends MainPageObject {
             driver.navigate().refresh();
         }
 
-        this.waitForArticleToDissapearByTitle(name_of_article);
+        this.waitForArticleToDisappearByTitle(name_of_article);
     }
 
-    public void waitForArticleToDissapearByTitle(String name_of_article) {
+    public void waitForArticleToDisappearByTitle(String name_of_article) {
         this.waitForElementNotPresent(
                 getSavedArticleXpathByTitle(name_of_article),
                 "Saved article still present with title " + name_of_article,
                 10
         );
+    }
+    public int getCountOfArticlesInWatchlist() {
+        return this.getAmountOfElements(WATCHLIST_ARTICLES);
+
     }
     public void waitForArticleToAppearByTitle(String name_of_article) {
         this.waitForElementPresent(
